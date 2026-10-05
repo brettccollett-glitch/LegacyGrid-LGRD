@@ -3,20 +3,25 @@ pragma solidity ^0.8.24;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract LegacyGrid is ERC20, ERC20Permit, Ownable {
+contract LegacyGrid is ERC20, ERC20Permit {
     uint256 public constant MAX_SUPPLY = 10_000_000_000 ether;
 
-    constructor(address initialOwner)
+    constructor(
+        address founderWallet,
+        address treasuryWallet
+    )
         ERC20("LegacyGrid", "LGRD")
         ERC20Permit("LegacyGrid")
-        Ownable(initialOwner)
     {
-        _mint(initialOwner, MAX_SUPPLY);
-    }
+        require(founderWallet != address(0), "Invalid founder wallet");
+        require(treasuryWallet != address(0), "Invalid treasury wallet");
+        require(founderWallet != treasuryWallet, "Wallets must differ");
 
-    function burn(uint256 amount) external {
-        _burn(msg.sender, amount);
+        // 5% founder allocation
+        _mint(founderWallet, 500_000_000 ether);
+
+        // 95% treasury allocation
+        _mint(treasuryWallet, 9_500_000_000 ether);
     }
 }
