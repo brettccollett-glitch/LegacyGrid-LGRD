@@ -18,10 +18,10 @@ contract LegacyGrid is ERC20, ERC20Permit {
         require(treasuryWallet != address(0), "Invalid treasury wallet");
         require(founderWallet != treasuryWallet, "Wallets must differ");
 
-        // 5% founder allocation
+        // 500,000,000 LGRD = 5%
         _mint(founderWallet, 500_000_000 ether);
 
-        // 95% treasury allocation
+        // 9,500,000,000 LGRD = 95%
         _mint(treasuryWallet, 9_500_000_000 ether);
     }
 }
